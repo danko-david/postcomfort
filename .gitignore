@@ -12,3 +12,15 @@ buildNumber.properties
 .project
 .classpath
 .checkstyle
+**/*.o
+**/*.d
+**/*.a
+**/*.map
+**/*.out
+**/*.elf
+**/*.e
+**/*.hex
+**/*.eep
+**/*.asm
+**/*.sizes
+
