@@ -8,16 +8,9 @@ import java.util.Map;
 
 import eu.javaexperience.cli.CliTools;
 import eu.javaexperience.electronic.uartbus.rpc.UartbusConnection;
-import eu.javaexperience.patterns.behavioral.cor.link.CorChainLink;
-import eu.javaexperience.postcomfort.web.controller.RootController;
 import eu.javaexperience.reflect.Mirror;
 import eu.javaexperience.rpc.JavaClassRpcUnboundFunctionsInstance;
 import eu.javaexperience.rpc.RpcFacility;
-import eu.javaexperience.web.Context;
-import eu.javaexperience.web.MIME;
-import eu.javaexperience.web.dispatch.DefaultDispatchStructure;
-import eu.javaexperience.web.dispatch.url.PreparedURL;
-import eu.javaexperience.web.facility.SiteFacilityTools;
 
 /**
  * There will be 3 channel of UARTBus in a vehicle:
@@ -75,37 +68,4 @@ public class PostComfortFacilities
 	{
 		return RPC_NS;
 	}
-	
-/****************************** Web Facilities ********************************/
-	
-	protected static final DefaultDispatchStructure DDS = new DefaultDispatchStructure();
-	static
-	{
-/************************ Assemble dispatch chains ****************************/
-		
-		DDS.getChains().getChainByName("app").addLink(new CorChainLink<Context>()
-		{
-			@Override
-			public boolean dispatch(Context ctx)
-			{
-				PostComfortBackendTools.acceptPostRequests(ctx);
-				PreparedURL url = ctx.getRequestUrl();
-				url.setPathPointer(url.getDomainElements());
-				return RootController.ROOT.dispatch(ctx);
-			}
-		});
-		
-		DDS.getChains().getChainByName("last").addLink(new CorChainLink<Context>()
-		{
-			@Override
-			public boolean dispatch(Context ctx)
-			{
-				ctx.getResponse().setStatus(404);
-				SiteFacilityTools.finishWithMimeSend(ctx, MIME.plain, "404");
-				return false;
-			}
-		});
-	}
-	
-	
 }
